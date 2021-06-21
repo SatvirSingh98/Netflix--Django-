@@ -36,7 +36,7 @@ class TestVideoModel(TestCase):
         data1.state = Video.VideoStateOptions.PUBLISH
         data1.save()
         data1.publish_timestamp = timezone.now()
-        condition = Video.objects.filter(publish_timestamp__lte=data1.publish_timestamp).exists()
+        condition = Video.objects.published().exists()
         self.assertTrue(condition)
 
     def test_video_publish_timestamp_if_draft(self):
