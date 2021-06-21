@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.utils import timezone
 from django.utils.text import slugify
 
-from .models import Video, VideoProxy
+from .models import PublishStateOptions, Video, VideoProxy
 
 
 class TestVideoModel(TestCase):
@@ -33,7 +33,7 @@ class TestVideoModel(TestCase):
         Test Video model publish_timestamp
         """
         data1 = self.data1
-        data1.state = Video.VideoStateOptions.PUBLISH
+        data1.state = PublishStateOptions.PUBLISH
         data1.save()
         data1.publish_timestamp = timezone.now()
         condition = Video.objects.published().exists()
@@ -44,7 +44,7 @@ class TestVideoModel(TestCase):
         Test Video model publish_timestamp
         """
         data1 = self.data1
-        data1.state = Video.VideoStateOptions.DRAFT
+        data1.state = PublishStateOptions.DRAFT
         data1.save()
         self.assertEqual(data1.publish_timestamp, None)
 
