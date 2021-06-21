@@ -1,5 +1,6 @@
 asgiref==3.3.4
 autopep8==1.5.7
+coverage==5.5
 Django==3.2.4
 django-appconf==1.0.4
 django-compressor==2.4.1
