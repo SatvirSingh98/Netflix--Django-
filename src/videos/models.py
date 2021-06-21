@@ -6,6 +6,11 @@ class Video(models.Model):
     slug = models.SlugField(blank=True, null=True)
     description = models.TextField()
     video_id = models.CharField(max_length=150)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = 'Videos'
+        verbose_name_plural = 'All Videos'
 
     def __str__(self):
         return self.title
