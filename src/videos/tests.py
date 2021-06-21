@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.utils import timezone
+from django.utils.text import slugify
 
 from .models import Video, VideoProxy
 
@@ -7,7 +8,7 @@ from .models import Video, VideoProxy
 class TestVideoModel(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.data1 = Video.objects.create(title='django-tutorial')
+        cls.data1 = Video.objects.create(title='django-tutorial', video_id='video')
         cls.data2 = VideoProxy.objects.create(title='django-tutorial')
 
     def test_video_model_return(self):
@@ -57,3 +58,10 @@ class TestVideoModel(TestCase):
         data1.active = False
         setattr(data1, data1.is_published, 'No')
         self.assertEqual(data1.is_published, 'No')
+
+    def test_video_slug_field(self):
+        """
+        Test Video model slug field
+        """
+        title_slug = slugify(self.data1.title)
+        self.assertEqual(title_slug, self.data1.slug)
