@@ -15,6 +15,12 @@ class Video(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def is_published(self):
+        if self.active:
+            return 'Yes'
+        return 'No'
+
 
 class VideoProxy(Video):
     class Meta:

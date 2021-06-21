@@ -7,15 +7,16 @@ from .models import Video, VideoProxy
 class VideoAdmin(admin.ModelAdmin):
     '''Admin View for Video'''
 
-    list_display = ('__str__', 'video_id')
+    list_display = ('__str__', 'id', 'video_id', 'is_published')
     search_fields = ('title',)
+    list_filter = ('active',)
 
 
 @admin.register(VideoProxy)
 class VideoProxyAdmin(admin.ModelAdmin):
     '''Admin View for VideoProxy'''
 
-    list_display = ('__str__', 'video_id')
+    list_display = ('__str__', 'id', 'video_id')
     search_fields = ('title',)
 
     def get_queryset(self, request):
