@@ -47,7 +47,7 @@ class Video(models.Model):
         return 'No'
 
     def get_playlist_ids(self):
-        return list(self.playlist_set.all().values_list('id', flat=True))
+        return list(self.playlist_featured.all().values_list('id', flat=True))
 
 
 pre_save.connect(publish_state_pre_save, sender=Video)

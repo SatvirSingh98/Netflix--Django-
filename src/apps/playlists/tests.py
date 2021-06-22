@@ -8,27 +8,36 @@ from .models import Playlist, PublishStateOptions
 
 
 class TestPlaylistModel(TestCase):
+    def create_videos(self):
+        self.video_1 = Video.objects.create(title='django-tutorial', video_id='abc1')
+        self.video_2 = Video.objects.create(title='django-tutorial', video_id='abc12')
+        self.video_3 = Video.objects.create(title='django-tutorial', video_id='abc123')
+        self.video_qs = Video.objects.all()
+
     @classmethod
     def setUpTestData(cls):
-        cls.data1 = Video.objects.create(title='django-tutorial', video_id='abc123')
-        cls.data2 = Playlist.objects.create(title='django-tutorial', video=cls.data1)
+        cls.create_videos(cls)
+        cls.playlist_1 = Playlist.objects.create(title='django-tutorial', video=cls.video_1)
+        cls.playlist_2 = Playlist.objects.create(title='django-tutorial')
+        cls.playlist_2.videos.set(cls.video_qs)
+        cls.playlist_2.save()
 
     def test_playlist_model_return(self):
         """
         Test Playlist model return name
         """
-        data2 = self.data2
-        self.assertIsInstance(data2, Playlist)
-        self.assertEqual(str(data2), 'django-tutorial')
+        playlist_1 = self.playlist_1
+        self.assertIsInstance(playlist_1, Playlist)
+        self.assertEqual(str(playlist_1), 'django-tutorial')
 
     def test_playlist_publish_timestamp_if_published(self):
         """
         Test Playlist model publish_timestamp
         """
-        data2 = self.data2
-        data2.state = PublishStateOptions.PUBLISH
-        data2.save()
-        data2.publish_timestamp = timezone.now()
+        playlist_1 = self.playlist_1
+        playlist_1.state = PublishStateOptions.PUBLISH
+        playlist_1.save()
+        playlist_1.publish_timestamp = timezone.now()
         condition = Playlist.objects.published().exists()
         self.assertTrue(condition)
 
@@ -36,32 +45,39 @@ class TestPlaylistModel(TestCase):
         """
         Test Playlist model publish_timestamp
         """
-        data2 = self.data2
-        data2.state = PublishStateOptions.DRAFT
-        data2.save()
-        self.assertEqual(data2.publish_timestamp, None)
+        playlist_1 = self.playlist_1
+        playlist_1.state = PublishStateOptions.DRAFT
+        playlist_1.save()
+        self.assertEqual(playlist_1.publish_timestamp, None)
 
     def test_playlist_is_published(self):
         """
         Test Playlist model is_published
         """
-        data2 = self.data2
-        setattr(data2, data2.is_published, 'Yes')
-        self.assertEqual(data2.is_published, 'Yes')
-        data2.active = False
-        setattr(data2, data2.is_published, 'No')
-        self.assertEqual(data2.is_published, 'No')
+        playlist_1 = self.playlist_1
+        setattr(playlist_1, playlist_1.is_published, 'Yes')
+        self.assertEqual(playlist_1.is_published, 'Yes')
+        playlist_1.active = False
+        setattr(playlist_1, playlist_1.is_published, 'No')
+        self.assertEqual(playlist_1.is_published, 'No')
 
     def test_playlist_slug_field(self):
         """
         Test Playlist model slug field
         """
-        title_slug = slugify(self.data2.title)
-        self.assertEqual(title_slug, self.data2.slug)
+        title_slug = slugify(self.playlist_1.title)
+        self.assertEqual(title_slug, self.playlist_1.slug)
 
     def test_video_playlist(self):
         """
         Test foreign key relation
         """
-        qs = self.data1.playlist_set.all()
+        qs = self.video_1.playlist_featured.all()
         self.assertEqual(qs.count(), 1)
+
+    def test_playlist_many_to_many_relation(self):
+        """
+        Test many_to_many key relation
+        """
+        qs_count = self.playlist_2.videos.count()
+        self.assertEqual(qs_count, 3)

@@ -75,8 +75,9 @@ class TestVideoModel(TestCase):
         """
         Test get_playlist_ids for videos
         """
-        qs = self.data1.get_playlist_ids()
-        self.assertIn(self.data1.id, qs)
+        playlist_ids = self.data1.get_playlist_ids()
+        actual_ids = list(Playlist.objects.values_list('id', flat=True))
+        self.assertEqual(playlist_ids, actual_ids)
 
     def test_admin_get_queryset(self):
         """

@@ -22,7 +22,9 @@ class PlaylistManager(models.Manager):
 
 
 class Playlist(models.Model):
-    video = models.ForeignKey(Video, on_delete=models.SET_NULL, null=True)
+    video = models.ForeignKey(Video, on_delete=models.SET_NULL, null=True,
+                              blank=True, related_name='playlist_featured')
+    videos = models.ManyToManyField(Video, blank=True, related_name='playlist_item')
     title = models.CharField(max_length=150)
     slug = models.SlugField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
