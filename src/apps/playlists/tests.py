@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.utils import timezone
 from django.utils.text import slugify
 
-from videos.models import Video
+from apps.videos.models import Video
 
 from .models import Playlist, PublishStateOptions
 

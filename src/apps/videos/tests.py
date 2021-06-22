@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.utils import timezone
 from django.utils.text import slugify
 
-from playlists.models import Playlist
+from apps.playlists.models import Playlist
 
 from .admin import VideoProxyAdmin
 from .models import PublishStateOptions, Video, VideoProxy
