@@ -7,10 +7,10 @@ from .models import Video, VideoProxy
 class VideoAdmin(admin.ModelAdmin):
     '''Admin View for Video'''
 
-    list_display = ('__str__', 'id', 'state', 'video_id', 'is_published')
+    list_display = ('__str__', 'id', 'state', 'video_id', 'is_published', 'get_playlist_ids')
     search_fields = ('title',)
     list_filter = ('active', 'state')
-    readonly_fields = ('publish_timestamp',)
+    readonly_fields = ('publish_timestamp', 'get_playlist_ids')
 
 
 @admin.register(VideoProxy)

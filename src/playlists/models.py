@@ -25,7 +25,7 @@ class Playlist(models.Model):
     video = models.ForeignKey(Video, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=150)
     slug = models.SlugField(blank=True, null=True)
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
     active = models.BooleanField(default=True)
     state = models.CharField(max_length=2, choices=PublishStateOptions.choices, default=PublishStateOptions.DRAFT)
     publish_timestamp = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, null=True)

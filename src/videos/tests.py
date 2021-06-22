@@ -2,6 +2,8 @@ from django.test import TestCase
 from django.utils import timezone
 from django.utils.text import slugify
 
+from playlists.models import Playlist
+
 from .models import PublishStateOptions, Video, VideoProxy
 
 
@@ -10,6 +12,7 @@ class TestVideoModel(TestCase):
     def setUpTestData(cls):
         cls.data1 = Video.objects.create(title='django-tutorial', video_id='video')
         cls.data2 = VideoProxy.objects.create(title='django-tutorial')
+        cls.data3 = Playlist.objects.create(title='django-tutorial', video=cls.data1)
 
     def test_video_model_return(self):
         """
@@ -65,3 +68,10 @@ class TestVideoModel(TestCase):
         """
         title_slug = slugify(self.data1.title)
         self.assertEqual(title_slug, self.data1.slug)
+
+    def test_get_playlist_ids(self):
+        """
+        Test get_playlist_ids for videos
+        """
+        qs = self.data1.get_playlist_ids()
+        self.assertIn(self.data1.id, qs)
