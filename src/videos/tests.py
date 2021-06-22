@@ -1,9 +1,11 @@
+from django.http import HttpRequest
 from django.test import TestCase
 from django.utils import timezone
 from django.utils.text import slugify
 
 from playlists.models import Playlist
 
+from .admin import VideoProxyAdmin
 from .models import PublishStateOptions, Video, VideoProxy
 
 
@@ -75,3 +77,10 @@ class TestVideoModel(TestCase):
         """
         qs = self.data1.get_playlist_ids()
         self.assertIn(self.data1.id, qs)
+
+    def test_admin_get_queryset(self):
+        """
+        Test get_queryset for admin
+        """
+        qs = VideoProxyAdmin.get_queryset(self, request=HttpRequest())
+        self.assertEqual(qs.count(), 2)
