@@ -24,7 +24,11 @@ class PlaylistManager(models.Manager):
 class Playlist(models.Model):
     video = models.ForeignKey(Video, on_delete=models.SET_NULL, null=True,
                               blank=True, related_name='playlist_featured')
-    videos = models.ManyToManyField(Video, blank=True, related_name='playlist_item')
+
+    # info: m2m fields does not give info about when the individual videos were added and for what.
+    # del: videos = models.ManyToManyField(Video, blank=True, related_name='playlist_item')
+    videos = models.ManyToManyField(Video, blank=True, related_name='playlist_item', through='PlaylistItem')
+
     title = models.CharField(max_length=150)
     slug = models.SlugField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
@@ -48,3 +52,17 @@ class Playlist(models.Model):
 
 pre_save.connect(publish_state_pre_save, sender=Playlist)
 pre_save.connect(slugify_pre_save, sender=Playlist)
+
+
+# imp: This model will give info about relation between playlist and videos.
+# imp: It will return playlist queryset and not video queryset.
+class PlaylistItem(models.Model):
+    # info: Actual fields have to corresspond correctly.
+    # info: Both the m2m field and model class must be fk(s) here.
+    playlist = models.ForeignKey(Playlist, on_delete=models.CASCADE)
+    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+    order = models.IntegerField(default=1)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['order', '-timestamp']
