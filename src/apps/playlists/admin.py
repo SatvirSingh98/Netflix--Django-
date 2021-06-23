@@ -1,5 +1,13 @@
 from django.contrib import admin
 
-from .models import Playlist
+from .models import Playlist, PlaylistItem
 
-admin.site.register(Playlist)
+
+class PlaylistItemInline(admin.TabularInline):
+    extra = 0
+    model = PlaylistItem
+
+
+@admin.register(Playlist)
+class Playlist(admin.ModelAdmin):
+    inlines = [PlaylistItemInline]
