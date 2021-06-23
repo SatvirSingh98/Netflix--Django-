@@ -81,3 +81,12 @@ class TestPlaylistModel(TestCase):
         """
         qs_count = self.playlist_2.videos.count()
         self.assertEqual(qs_count, 3)
+
+    def test_playlist_many_to_many_through_relation(self):
+        """
+        Test many_to_many 'through' key relation
+        """
+        video_qs = sorted(self.video_qs.values_list('id', flat=True))
+        playlist_video_qs = sorted(self.playlist_2.videos.all().values_list('id', flat=True))
+        playlistitem_qs = sorted(self.playlist_2.playlistitem_set.all().values_list('video', flat=True))
+        self.assertEqual(video_qs, playlist_video_qs, playlistitem_qs)
