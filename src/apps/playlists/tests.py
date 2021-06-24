@@ -1,9 +1,11 @@
+from django.http import HttpRequest
 from django.test import TestCase
 from django.utils import timezone
 from django.utils.text import slugify
 
 from apps.videos.models import Video
 
+from .admin import TVShowProxyAdmin, TVShowSeasonProxyAdmin
 from .models import Playlist, PublishStateOptions
 
 
@@ -119,3 +121,17 @@ class TestPlaylistModel(TestCase):
         """
         seasons = self.show.playlist_set.all()
         self.assertEqual(seasons.count(), 3)
+
+    def test_TVShowProxyAdmin_get_queryset(self):
+        """
+        Test get_queryset for TVShowProxyAdmin
+        """
+        qs = TVShowProxyAdmin.get_queryset(self, request=HttpRequest())
+        self.assertEqual(qs.count(), 3)
+
+    def test_TVShowSeasonProxyAdmin_get_queryset(self):
+        """
+        Test get_queryset for TVShowSeasonProxyAdmin
+        """
+        qs = TVShowSeasonProxyAdmin.get_queryset(self, request=HttpRequest())
+        self.assertEqual(qs.count(), 3)

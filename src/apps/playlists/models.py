@@ -68,3 +68,33 @@ class PlaylistItem(models.Model):
 
     class Meta:
         ordering = ['order', '-timestamp']
+
+
+class TVShowProxyManager(PlaylistManager):
+    def all(self):
+        return self.get_queryset().filter(parent__isnull=True)
+
+
+class TVShowProxy(Playlist):
+
+    objects = TVShowProxyManager()
+
+    class Meta:
+        proxy = True
+        verbose_name = 'TV Show'
+        verbose_name_plural = 'TV Shows'
+
+
+class TVShowSeasonProxyManager(PlaylistManager):
+    def all(self):
+        return self.get_queryset().filter(parent__isnull=False)
+
+
+class TVShowSeasonProxy(Playlist):
+
+    objects = TVShowSeasonProxyManager()
+
+    class Meta:
+        proxy = True
+        verbose_name = 'Season'
+        verbose_name_plural = 'Seasons'
