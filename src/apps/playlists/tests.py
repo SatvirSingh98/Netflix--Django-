@@ -79,10 +79,8 @@ class TestPlaylistModel(TestCase):
         Test Playlist model is_published
         """
         playlist_1 = self.playlist_1
-        setattr(playlist_1, playlist_1.is_published, 'Yes')
         self.assertEqual(playlist_1.is_published, 'Yes')
         playlist_1.active = False
-        setattr(playlist_1, playlist_1.is_published, 'No')
         self.assertEqual(playlist_1.is_published, 'No')
 
     def test_playlist_slug_field(self):
