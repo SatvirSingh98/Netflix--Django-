@@ -8,6 +8,13 @@ from .models import Playlist, PublishStateOptions
 
 
 class TestPlaylistModel(TestCase):
+    def create_show_with_seasons(self):
+        the_office = Playlist.objects.create(title='The Office Series')
+        Playlist.objects.create(title='The Office Series Season 1', parent=the_office, order=1)
+        Playlist.objects.create(title='The Office Series Season 2', parent=the_office, order=2)
+        Playlist.objects.create(title='The Office Series Season 3', parent=the_office, order=3)
+        self.show = the_office
+
     def create_videos(self):
         self.video_1 = Video.objects.create(title='django-tutorial', video_id='abc1')
         self.video_2 = Video.objects.create(title='django-tutorial', video_id='abc12')
@@ -17,6 +24,7 @@ class TestPlaylistModel(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.create_videos(cls)
+        cls.create_show_with_seasons(cls)
         cls.playlist_1 = Playlist.objects.create(title='django-tutorial', video=cls.video_1)
         cls.playlist_2 = Playlist.objects.create(title='django-tutorial')
         cls.playlist_2.videos.set(cls.video_qs)
@@ -29,6 +37,20 @@ class TestPlaylistModel(TestCase):
         playlist_1 = self.playlist_1
         self.assertIsInstance(playlist_1, Playlist)
         self.assertEqual(str(playlist_1), 'django-tutorial')
+
+    def test_published_count(self):
+        """
+        Test count of published playlists
+        """
+        qs = Playlist.objects.filter(state=PublishStateOptions.PUBLISH)
+        self.assertEqual(qs.count(), 0)
+
+    def test_draft_count(self):
+        """
+        Test count of draft playlists
+        """
+        qs = Playlist.objects.filter(state=PublishStateOptions.DRAFT)
+        self.assertEqual(qs.count(), 6)
 
     def test_playlist_publish_timestamp_if_published(self):
         """
@@ -90,3 +112,10 @@ class TestPlaylistModel(TestCase):
         playlist_video_qs = sorted(self.playlist_2.videos.all().values_list('id', flat=True))
         playlistitem_qs = sorted(self.playlist_2.playlistitem_set.all().values_list('video', flat=True))
         self.assertEqual(video_qs, playlist_video_qs, playlistitem_qs)
+
+    def test_show_has_seasons(self):
+        """
+        Test to confirm created shows have seasons
+        """
+        seasons = self.show.playlist_set.all()
+        self.assertEqual(seasons.count(), 3)

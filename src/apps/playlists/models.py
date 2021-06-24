@@ -22,6 +22,8 @@ class PlaylistManager(models.Manager):
 
 
 class Playlist(models.Model):
+    parent = models.ForeignKey('self', on_delete=models.SET_NULL, null=True)
+    order = models.IntegerField(default=1)
     video = models.ForeignKey(Video, on_delete=models.SET_NULL, null=True,
                               blank=True, related_name='playlist_featured')
 
