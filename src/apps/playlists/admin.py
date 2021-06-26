@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import Playlist, PlaylistItem, TVShowProxy, TVShowSeasonProxy
+from .models import (MovieProxy, Playlist, PlaylistItem, TVShowProxy,
+                     TVShowSeasonProxy)
 
 
 class PlaylistItemInline(admin.TabularInline):
@@ -11,6 +12,9 @@ class PlaylistItemInline(admin.TabularInline):
 @admin.register(Playlist)
 class PlaylistAdmin(admin.ModelAdmin):
     inlines = [PlaylistItemInline]
+
+    def get_queryset(self, request):
+        return Playlist.objects.filter(type=Playlist.PlaylistTypeChoices.PLAYLIST)
 
 
 class TVShowSeasonProxyInline(admin.TabularInline):
@@ -40,3 +44,11 @@ class TVShowSeasonProxyAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         return TVShowSeasonProxy.objects.all()
+
+
+@admin.register(MovieProxy)
+class MovieProxyAdmin(admin.ModelAdmin):
+    fields = ('title', 'state', 'description', 'video', 'slug')
+
+    def get_queryset(self, request):
+        return MovieProxy.objects.all()

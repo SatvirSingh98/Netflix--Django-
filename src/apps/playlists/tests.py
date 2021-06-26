@@ -5,16 +5,20 @@ from django.utils.text import slugify
 
 from apps.videos.models import Video
 
-from .admin import TVShowProxyAdmin, TVShowSeasonProxyAdmin
+from .admin import (MovieProxyAdmin, PlaylistAdmin, TVShowProxyAdmin,
+                    TVShowSeasonProxyAdmin)
 from .models import Playlist, PublishStateOptions
 
 
 class TestPlaylistModel(TestCase):
     def create_show_with_seasons(self):
-        the_office = Playlist.objects.create(title='The Office Series')
-        Playlist.objects.create(title='The Office Series Season 1', parent=the_office, order=1)
-        Playlist.objects.create(title='The Office Series Season 2', parent=the_office, order=2)
-        Playlist.objects.create(title='The Office Series Season 3', parent=the_office, order=3)
+        the_office = Playlist.objects.create(title='The Office Series', type=Playlist.PlaylistTypeChoices.SHOW)
+        Playlist.objects.create(title='The Office Series Season 1', parent=the_office, order=1,
+                                type=Playlist.PlaylistTypeChoices.SEASON)
+        Playlist.objects.create(title='The Office Series Season 2', parent=the_office, order=2,
+                                type=Playlist.PlaylistTypeChoices.SEASON)
+        Playlist.objects.create(title='The Office Series Season 3', parent=the_office, order=3,
+                                type=Playlist.PlaylistTypeChoices.SEASON)
         self.show = the_office
 
     def create_videos(self):
@@ -125,7 +129,7 @@ class TestPlaylistModel(TestCase):
         Test get_queryset for TVShowProxyAdmin
         """
         qs = TVShowProxyAdmin.get_queryset(self, request=HttpRequest())
-        self.assertEqual(qs.count(), 3)
+        self.assertEqual(qs.count(), 1)
 
     def test_TVShowSeasonProxyAdmin_get_queryset(self):
         """
@@ -133,3 +137,17 @@ class TestPlaylistModel(TestCase):
         """
         qs = TVShowSeasonProxyAdmin.get_queryset(self, request=HttpRequest())
         self.assertEqual(qs.count(), 3)
+
+    def test_MovieProxyAdmin_get_queryset(self):
+        """
+        Test get_queryset for MovieProxyAdmin
+        """
+        qs = MovieProxyAdmin.get_queryset(self, request=HttpRequest())
+        self.assertEqual(qs.count(), 0)
+
+    def test_PlaylistAdmin_get_queryset(self):
+        """
+        Test get_queryset for PlaylistAdmin
+        """
+        qs = PlaylistAdmin.get_queryset(self, request=HttpRequest())
+        self.assertEqual(qs.count(), 2)
