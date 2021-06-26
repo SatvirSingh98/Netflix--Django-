@@ -26,7 +26,7 @@ class TVShowSeasonProxyInline(admin.TabularInline):
 @admin.register(TVShowProxy)
 class TVShowProxyAdmin(admin.ModelAdmin):
     inlines = [TVShowSeasonProxyInline]
-    fields = ('title', 'state', 'description', 'video', 'slug')
+    fields = ('title', 'state', 'category', 'description', 'video', 'slug')
 
     def get_queryset(self, request):
         return TVShowProxy.objects.all()
@@ -48,7 +48,7 @@ class TVShowSeasonProxyAdmin(admin.ModelAdmin):
 
 @admin.register(MovieProxy)
 class MovieProxyAdmin(admin.ModelAdmin):
-    fields = ('title', 'state', 'description', 'video', 'slug')
+    fields = ('title', 'state', 'category', 'description', 'video', 'slug')
 
     def get_queryset(self, request):
         return MovieProxy.objects.all()

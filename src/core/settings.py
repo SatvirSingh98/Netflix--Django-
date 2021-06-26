@@ -32,6 +32,7 @@ INSTALLED_APPS = [
 
     'apps.videos',
     'apps.playlists',
+    'apps.categories',
 
     'compressor',
 ]

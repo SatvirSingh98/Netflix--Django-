@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.utils import timezone
 
+from apps.categories.models import Category
 from apps.videos.models import Video
 from core.db.models import PublishStateOptions
 from core.db.receivers import publish_state_pre_save, slugify_pre_save
@@ -29,6 +30,7 @@ class Playlist(models.Model):
         PLAYLIST = 'playlist', 'Playlist'
 
     parent = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name='playlists')
     order = models.IntegerField(default=1)
     video = models.ForeignKey(Video, on_delete=models.SET_NULL, null=True,
                               blank=True, related_name='playlist_featured')
