@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'apps.playlists',
     'apps.categories',
     'apps.tags',
+    'apps.ratings',
 
     'compressor',
 ]
