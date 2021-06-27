@@ -1,8 +1,10 @@
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.db.models.signals import pre_save
 from django.utils import timezone
 
 from apps.categories.models import Category
+from apps.tags.models import TaggedItem
 from apps.videos.models import Video
 from core.db.models import PublishStateOptions
 from core.db.receivers import publish_state_pre_save, slugify_pre_save
@@ -48,6 +50,7 @@ class Playlist(models.Model):
     publish_timestamp = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    tags = GenericRelation(TaggedItem, related_query_name='playlist')
 
     objects = PlaylistManager()
 
