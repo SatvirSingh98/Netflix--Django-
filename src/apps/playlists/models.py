@@ -1,9 +1,11 @@
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
+from django.db.models import Avg, Max, Min
 from django.db.models.signals import pre_save
 from django.utils import timezone
 
 from apps.categories.models import Category
+from apps.ratings.models import Rating
 from apps.tags.models import TaggedItem
 from apps.videos.models import Video
 from core.db.models import PublishStateOptions
@@ -51,6 +53,7 @@ class Playlist(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     tags = GenericRelation(TaggedItem, related_query_name='playlist')
+    ratings = GenericRelation(Rating, related_query_name='playlist')
 
     objects = PlaylistManager()
 
@@ -62,6 +65,12 @@ class Playlist(models.Model):
         if self.active:
             return 'Yes'
         return 'No'
+
+    def get_rating_avg(self):
+        return Playlist.objects.filter(id=self.id).aggregate(average=Avg('ratings__value'))
+
+    def get_rating_spread(self):
+        return Playlist.objects.filter(id=self.id).aggregate(max=Max('ratings__value'), min=Min('ratings__value'))
 
 
 pre_save.connect(publish_state_pre_save, sender=Playlist)

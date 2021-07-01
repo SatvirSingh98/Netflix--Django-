@@ -23,4 +23,4 @@ class Rating(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
 
     def __str__(self):
-        return self.tag
+        return self.user.username
